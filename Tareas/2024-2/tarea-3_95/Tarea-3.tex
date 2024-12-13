@@ -1,0 +1,106 @@
+\documentclass[spanish, draft]{article}
+\usepackage{amsmath, amsfonts, amsthm}
+\begin{document}
+
+\title{
+    Tarea 3 \\
+    Informatica Teorica
+}
+\author{
+    Matias peñaloza
+    202373037-8
+}
+\date{
+    2024-2
+}
+\maketitle
+
+\begin{center}
+    \begin{tabular}{|l|r|}
+      \hline
+      \multicolumn{1}{|c|}{\textbf{Concepto}} &
+        \multicolumn{1}{c|}{\textbf{Tiempo [min]}} \\
+      \hline
+      Revisión & 10\\
+      \hline
+      Desarrollo    & 30\\
+      \hline
+      Informe	      & 30\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+\section{Enunciado}
+    Dé gramáticas de contexto libre para los lenguajes siguientes.
+    Explique brevemente sus diseños.
+    \begin{enumerate}
+    \item % 20242t3p1
+    \(L_1 = \{a^m b^n c^{m + n} \colon m, n \in \mathbb{N}\}\)
+    \item % 20242t3p2
+    \(L_2 = \{a^m b^m c^n d^n \colon m, n \in \mathbb{N}\}\)
+    \item % 20242t3p3
+    \(L_3 = \{\omega \in \{a, b\}^*
+                \colon \lvert \omega \rvert
+                        \text{\ es impar y el símbolo central es \(a\)}\}\)
+    \end{enumerate}
+
+\section{Desarollo}
+    Para evitar confusion es clave aclarar que en esta entrega se considera:
+    \begin{enumerate}
+        \item $0 \notin \mathbb{N}$
+        \item $0 \neq 2n \pm 1, \forall n \in \mathbb{Z} \Rightarrow 0$ no es impar
+    \end{enumerate}
+    una vez aclarado esto se presentan a continuacion las gramaticas pedidas en el enunciado.
+
+    \subsection{Gramatica $G_1$ para $L_1$}
+        Podemos notar que para formar palabras del tipo $a^mb^nc^{m+n} = a^mb^nc^nc^m$
+        unicamente necesitamos generar la misma cantidad de $a's$ que de $c's$ y la misma cantidad de $b's$ que de $c's$,
+        entonces para las $a's$ tendriamos algo asi:
+        $$S \longrightarrow aSc$$
+        Y para las $b's$ algo asi:
+        $$T \longrightarrow bTc$$
+        Ahora la seccion $b^nc^n$ esta entre la seccion $a^m$ y la seccion $c^m$ por lo que agregamos:
+        $$S \longrightarrow aTc$$
+        Uniendo las producciones anteriores para $S$ tendriamos algo asi:
+        $$S \longrightarrow aSc \mid aTc$$
+        Donde $T$ generaria $b^nc^n$ y $S$ generaria $a^mTc^m$, luego
+        agregamos una produccion que le de fin a $T$ con:
+        $$T \longrightarrow bc$$
+        Finalmente escribimos la gramatica $G_1$ como:
+        \begin{itemize}
+            \item[] $S \longrightarrow aSc \mid aTc$
+            \item[] $T \longrightarrow bTc \mid bc$
+        \end{itemize}
+
+    \subsection{Gramatica $G_2$ para $L_2$}
+        Teniendo en cuenta la gramatica que genera a $\{a^nb^n \colon n \in \mathbb{N}\}$ a la cual llamaremos $G_{ab}$:
+        $$S \longrightarrow aSb \mid ab$$
+        Nos basta con concatenar 2 gramaticas de este tipo ya que:
+        $$a^mb^mc^nd^n = a^mb^m \cdot c^nd^n$$
+        $$L(a^mb^m \cdot c^nd^n) = L(G_{ab}) \cdot L(G_{cd})$$
+        De esta forma nombramos a $G_{ab}$ como $A$ y a $G_{cd}$ como $B$, lo que resulta en nuestro $G_2$:
+        \begin{itemize}
+            \item[] $S \longrightarrow AB$
+            \item[] $A \longrightarrow aAb \mid ab$
+            \item[] $B \longrightarrow cBd \mid cd$
+        \end{itemize}
+
+    \subsection{Gramatica $G_3$ para $L_3$}
+        Lo primero que podemos notar es que como minimo debe haber una $a$:
+        $$S \longrightarrow a$$
+        Luego necesitamos generar pares de simbolos alrededor para que la palabra
+        mantenga un largo impar:
+        $$S \longrightarrow TST$$
+        Ahora juntamos las producciones anteriores en:
+        $$S \longrightarrow TST \mid a$$
+        Donde $T$ debiese poder ser $a$ o $b$ pero no $\varepsilon$ para poder
+        generar todas las combinaciones de $a's$ y $b's$ alrededor de una $a$,
+        manteniendo el largo impar. Por lo que para $T$ tenemos:
+        $$T \longrightarrow a \mid b$$
+        Finalmente escribimos nuestra gramatica $G_3$ como:
+        \begin{itemize}
+            \item[] $S \longrightarrow TST \mid a$
+            \item[] $T \longrightarrow a \mid b$
+        \end{itemize}
+
+\end{document}

@@ -1,0 +1,1 @@
+Todo lo que se hizo con las notaciones en el inicio no tiene mucho sentido, si la idea era dividir en sublenguajes no sirve para desmostrar y solo entorpese el desarrollo, si nop se quizo hacer eso, esto hay una mala comprension de como funcionan los lenguajes en este tipo de problemas.

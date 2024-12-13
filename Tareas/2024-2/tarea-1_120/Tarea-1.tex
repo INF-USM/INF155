@@ -1,0 +1,113 @@
+\documentclass[spanish, draft]{article}
+\usepackage{amsmath, amsfonts, amsthm}
+\begin{document}
+
+\title{
+    Tarea 1 \\
+    Informatica Teorica
+}
+\author{
+    Matias peñaloza
+    202373037-8
+}
+\date{
+    2024-2
+}
+\maketitle
+
+\begin{center}
+    \begin{tabular}{|l|r|}
+      \hline
+      \multicolumn{1}{|c|}{\textbf{Concepto}} &
+        \multicolumn{1}{c|}{\textbf{Tiempo [min]}} \\
+      \hline
+      Revisión & 30\\
+      \hline
+      Desarrollo    & 90\\
+      \hline
+      Informe	      & 90\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+\section*{Enunciado}
+  Dos expresiones regulares se dicen \emph{equivalentes}
+  si describen el mismo lenguaje.
+  Se anota \(R \equiv S\) si \(R\) y \(S\) son equivalentes.
+  ¿Cuáles de los pares siguientes son equivalentes?
+  Justifique.
+  \begin{enumerate}
+  \item % 20242t1p1
+    \((b \mid \varepsilon) (a b)^* (a \mid \varepsilon)\)
+    y \((a \mid \varepsilon) (b a)^* (b \mid \varepsilon)\)
+  \item % 20242t1p2
+    \((a \mid b \mid c)^* a (b \mid c)^* b c^*\)
+    y \((a \mid b \mid c)^* a (a \mid b \mid c)^* b (a \mid b \mid c)^*\)
+  \item % 20242t1p3
+    \(a a^*\)
+    y \(a^* a\)
+  \item % 20242t1p4
+    \((a \mid b)^*\)
+    y \((a \mid c)^*\)
+  \item % 20242t1p5
+    \((a^* b^*)^*\)
+    y \((a \mid b)^*\)
+  \end{enumerate}
+
+\section*{Antes de comenzar}
+	Para simplificar en cada item llamaremos $R$ a la expresion regular izquierda y $S$ a la expresion regular derecha.
+
+\section*{Desarrollo}
+	\subsection* {1. Demostracion directa}
+      	Si $R$ y $S$ describen el mismo lenguaje entonces tenemos que $\forall \sigma$ se cumple que
+        $$\sigma \in L(R) \iff \sigma \in L(S) \tag{1}$$
+        Siguiendo esto partiremos analizando las palabras minimas que se pueden formar con ambos lenguajes.\\\\
+        Para $R$:
+        $$b , a, ba, ab$$
+        Para $S$:
+        $$a, b, ab, ba$$
+        Podemos observar que ambas expresiones son capaces de generar las palabras minimas del otro, por lo que es un buen indicio de que describen el mismo lenguaje, ahora analizaremos las palabras que pueden generar con la estrella de kleen mas de una vez.\\\\
+        Para $R$:
+        $$b \cdot (ab)^k \cdot a = bab...aba = (ba)^{k+1} \in L(S)$$
+        $$b \cdot (ab)^k = bab...ab = (ba)^k \cdot b \in L(S)$$
+        $$(ab)^k \cdot a = ab...aba = a \cdot (ba)^k \in L(S)$$
+        $$(ab)^k = ab...ab = a \cdot (ba)^n \cdot b \in L(S)$$
+        Para $S$:
+        $$a \cdot (ba)^n \cdot b = aba...bab = (ab)^n \in L(R)$$
+        $$a \cdot (ba)^n = aba...ba = (ab)^n \cdot a \in L(R)$$
+        $$(ba)^n \cdot b = ba...bab = b \cdot (ab)^n \in L(R)$$
+        $$(ba)^n = ba...ba = b \cdot (ab)^k \cdot a \in L(R)$$
+      Ahora podemos ver que todas las palabras generadas por $R$ pueden ser generadas por $S$ y viceversa, por lo que $R$ y $S$ describen el mismo lenguaje y por lo tanto son equivalentes.
+
+
+	\subsection* {2. Contradiccion}
+    	De la proposicion $(1)$ podemos obtener
+        $$\sigma \notin L(R) \iff \sigma \notin L(S) \tag{2}$$
+        Por lo que si $R$ y $S$ son equivalentes, entoces no existe $\sigma \in L(S)$ tal que $\sigma \notin L(R)$.\\
+        Luego, podemos ver que existe
+        $$aba \in L(S)$$
+        que se obtiene de escoger nada en $(a|b|c)^*$, luego $a$, escoger nada en $(a|b|c)^*$, luego $b$ y por ultimo escoger $a$ en $(a|b|c)^*$.\\
+        Esta palabra no puede ser generada por la expresion regular $R$, ya que, escogeriamos nada en $(a|b|c)^*$, luego $a$, nada en $(b|c)^*$, luego $b$ y al llegar a ese punto no se puede escoger $a$ en $c^*$. Por lo que $R$ no describiria el mismo lenguaje que $S$ y por lo tanto no serian equivalentes.
+        
+	\subsection*{3. Demostracion directa}
+    	Siguiendo la proposicion $(1)$ analizaremos las palabras generadas por ambas expresiones.\\
+        La palabra minima para $R$ es $a$, la cual es la misma para $S$, luego las palabras que se generan utilizando la estrella de kleen son:\\\\
+        Para $R$:
+        $$a \cdot a^k = aa...a = a^k \cdot a \in L(S)$$
+        Para $S$:
+        $$a^k \cdot a = a...aa = a \cdot a^k \in L(R)$$
+		Aqui es facil ver que ambas expresiones regulares coinciden, por lo que $R$ y $S$ describirian el mismo lenguaje, entonces concluimos que $R$ y $S$ son equivalentes.
+        
+	\subsection*{4. Contradiccion}
+		Siguiendo la proposicion $(2)$ y la misma logica del item 2, podemos ver que existe
+        $$b \in L(R)$$
+        que se genera de escoger $b$ en $(a|b)^*$.\\
+        Esta palabra no puede ser generada por $S$ ya que no existe la opcion de escoger $b$ en $(a|c)^*$. Por lo que $R$ y $S$ no describirian el mismo lenguaje, entonces concluimos que no son equivalentes.
+        
+	\subsection*{5. Demostracion directa}
+    	Siguiendo la proposicion $(1)$, analizaremos las palabras generadas por ambas expresiones.\\
+		Podemos ver que la expresion regular $S$ puede generar las palabras $a$, $b$, $\varepsilon$ y toda combinacion de palabras que contengan $a$'s y/o $b$'s en cualquier orden y cantidad.\\\\
+		La expresion $R$ tambien puede generar $a$, $b$, $\varepsilon$. Ahora el patron $a^*b^*$ puede generar cantidades indefinidas de $a$'s y de $b$'s con la limitacion de que si existen $a$'s en la palabra estas deben ir al principio de la palabra, luego como esta expresion esta contenida dentro de una estrella de kleen, podemos volver a elegir la misma expresion indefinidamente por lo que ahora se podra generar $a$'s y $b$'s en cualquier orden, finalmente la expresion $R$ puede generar toda combinacion de palabras que contengan $a$'s y/o $b$'s en cualquier orden y cantidad.\\\\
+		En conclusion ambas expresiones describen el mismo lenguaje, por lo que $R$ y $S$ son equivalentes.
+
+\end{document}

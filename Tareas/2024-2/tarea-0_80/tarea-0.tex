@@ -1,0 +1,135 @@
+\documentclass[spanish, draft]{article}
+\usepackage{amsmath, amsfonts, amsthm}
+\begin{document}
+
+\title{
+    Tarea 0 \\
+    Informatica Teorica
+}
+\author{
+    Matias peñaloza
+    202373037-8
+}
+\date{
+    2024-2
+}
+\maketitle
+
+\begin{center}
+        \begin{tabular}{|l|r|}
+          \hline
+          \multicolumn{1}{|c|}{\textbf{Concepto}} &
+            \multicolumn{1}{c|}{\textbf{Tiempo [min]}} \\
+          \hline
+          Revisión & 30\\
+          \hline
+          Desarrollo    & 120\\
+          \hline
+          Informe	      & 60\\
+          \hline
+        \end{tabular}
+      \end{center}
+
+\section*{Objetivo}
+    Sobre el alfabeto \(\Sigma = \{a, b\}\)
+    definimos el lenguaje \(L\)
+    mediante la definición recursiva:
+    \begin{enumerate}
+        \item{ \(b \in L\) }
+        \item{Si \(\sigma \in L \), entonces \(\sigma b \in L\), \(\sigma a b \in L\) y \(b \sigma a \in L\). }
+    \end{enumerate}
+    Demueste formalmente que las palabras en \(L\) tienen más \(b\) que \(a\).
+
+\section*{Demostracion}
+
+\begin{itemize}
+    \item Definiciones:
+            \begin{itemize}
+                \item Utilizando las definiciones del lenguaje $L$, podemos ver que $L$ es infinito:\\
+                        \\
+                        $L = \{b, bb, bab, bba, bbb, bbab, bbba, ...\}$ \\
+                        \\
+                        Podemos descomponer $L$ y ver que esta definido de la forma: \\
+                        \\
+                        $L_0 = \{b\}$ \\
+                        $L_i = L_{i-1} \cup U_i$, donde $U_i = \bigcup\limits_{\sigma \in L_{i-1}} \{\sigma b, \sigma ab, b\sigma a\}$ y $i > 0$\\
+                        $L = L_\infty$ \\
+                \item Denotaremos $|x|_y$ como la cantidad de $y$'s hay en la palabra $x$
+            \end{itemize}
+    \item Hipotesis:\\
+            Todas las palabras que pertenecen al lenguaje $L$ tienen mayor cantidad de $b$'s que de $a$'s:\\ \\
+            $\forall \sigma \in L : |\sigma|_b > |\sigma|_a$\\
+    \item Proposicion:\\
+            Para comprobar nuestra hipotesis utilizaremos la siguiente proposicion:\\
+            $P(L_n): \forall \sigma \in L_n / |\sigma|_b > |\sigma|_a$\\
+            \\
+            Veremos si se cumple $P(L_n)$ para $n = 0$ y $n = 1$\\
+            $L_0 = \{b\}$ \\
+            $L_1 = \{b, bb, bab, bba\}$
+            \begin{itemize}
+                \item Para $P(L_0):$\\
+                        $|b|_b = 1$ $>$ $|b|_a = 0$
+                \item Para $P(L_1):$\\
+                    $|b|_b = 1$ $>$ $|b|_a = 0$\\
+                    $|bb|_b = 2$ $>$ $|bb|_a = 0$\\
+                    $|bab|_b = 2$ $>$ $|bab|_a = 1$\\
+                    $|bba|_b = 2$ $>$ $|bba|_a = 1$
+            \end{itemize}
+            Como podemos ver que $P(L_n)$ se cumple para $n = 0$ y $n = 1$ entonces los usaremos como casos base
+    \item Analisis inductivo:\\
+            Para poder analizar el comportamiento de nuestra proposicion a lo largo de nuestro camino hacia $L = L_\infty$, tendremos que analizar como se comportan las palabras en $U_i$, ya que $U_i$ a lo largo de $i \to \infty$ contendra todas las palabras que nos quedan por revisar hasta $L_\infty$.
+            Por lo tanto comprobaremos $P(U_i), \forall i \in \mathbb{N}$.\\
+            \\
+            Como podemos ver $U_i = \bigcup\limits_{\sigma \in L_{i-1}} \{\sigma b, \sigma ab, b\sigma a\}$, siendo $\sigma$ cada una de las palabras en $L_{i-1}$ podemos escribir:\\
+            \\
+            $U_i = L_{i-1} \cdot b \cup L_{i-1} \cdot ab \cup b \cdot L_{i-1} \cdot a$\\
+            \\
+            Ahora podemos ver que para comprobar $P(U_i)$ simplemente tenemos que comprobar que $P(L_{i-1} \cdot b)$, $P(L_{i-1} \cdot ab)$ y $P(b \cdot L_{i-1} \cdot a)$ se cumplan.
+            \begin{itemize}
+                \item Para $P(L_{i-1} \cdot b)$:\\
+                        partiendo de nuestros casos base podemos suponer que todas las palabras en $L_{i-1}$ cumplen la condicion, ssi $U_{i-1}$ tambien la cumple.
+                        Por lo que supondremos $P(L_{i-1})$ verdadero.\\
+                        \\
+                        Ahora si $\sigma \in L_{i-1}$, este cumple $|\sigma|_b > |\sigma|_a$, entonces:\\
+                        \\
+                        $|\sigma b|_b = |\sigma|_b + 1$\\
+                        $|\sigma b|_a = |\sigma|_a + 0$\\
+                        $|\sigma b|_b > |\sigma b|_a$\\
+                        \\
+                        Por lo tanto $P(L_{i-1} \cdot b)$ verdadero.
+                \item  Para $P(L_{i-1} \cdot ab)$:\\
+                        Utilizando la misma suposicion anterior tenemos que:\\
+                        $|\sigma ab|_b = |\sigma|_b + 1$\\
+                        $|\sigma ab|_a = |\sigma|_a + 1$\\
+                        $|\sigma ab|_b > |\sigma ab|_a$\\
+                        \\
+                        Por lo tanto $P(L_{i-1} \cdot ab)$ verdadero.\\
+                \item  Para $P(b \cdot L_{i-1} \cdot a)$:\\
+                        Utilizando la misma suposicion tenemos que:\\
+                        $|b\sigma a|_b = |\sigma|_b + 1$\\
+                        $|b\sigma a|_a = |\sigma|_a + 1$\\
+                        $|b\sigma a|_b > |b\sigma a|_a$\\
+                        \\
+                        Por lo tanto $P(b \cdot L_{i-1} \cdot a)$ verdadero.
+            \end{itemize}
+            Finalmente podemos decir que $P(U_i)$ es verdadero ssi $P(U_{i-1})$ tambien.
+    \item Conclusion:\\
+            Comprobamos que $P(L_0)$ y $P(L_1)$ son verdaderos, y que $P(U_i)$ es verdadero ssi $P(U_{i-1})$ tambien.\\
+            \\
+            Utilizando la definicion de $L_i$ con $i = 1$ podemos ver que:\\
+            \\
+            $P(L_1) = P(L_0 \cup U_1)$\\
+            \\
+            Lo que nos dice que $P(L_1) \iff [ P(L_0) \land P(U_1) ] $. Al ser $P(L_0)$ y $P(L_1)$ verdadero, no existe otra posibilidad mas que $P(U_1)$ verdadero.\\
+            \\
+            Al ser $P(U_1)$ verdadero y con la condicion de que $P(U_i)$ es verdadero ssi $P(U_{i-1})$ es verdadero, significa que $P(U_2)$ es verdadero, lo que implica que tambien $P(U_3)$, $P(U_4)$, $P(U_5)$...\\
+            \\
+            Finalmente podemos comprobar que $P(U_i)$, $\forall i \in \mathbb{N}$ es verdadero, lo que sumado a $P(L_0)$ verdadero, podemos decir que nuestra hipotesis:\\
+            \\
+            $\forall \sigma \in L : |\sigma|_b > |\sigma|_a$ se comprueba.\\
+        
+            Las palabras de $L$ tienen mas $b$'s que $a$'s
+\end{itemize}
+
+
+\end{document}

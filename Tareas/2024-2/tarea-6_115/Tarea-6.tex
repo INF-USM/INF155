@@ -1,0 +1,114 @@
+\documentclass[spanish]{article}
+\usepackage{etoolbox}
+\usepackage{babel}
+\usepackage{fourier}
+\usepackage{amsmath, amsfonts}
+\usepackage{csquotes}
+\usepackage[basic]{complexity}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\begin{document}
+
+\title{
+    Tarea 6 \\
+    Informática Teórica
+}
+\author{
+    Matías Peñaloza \\
+    202373037-8
+}
+\date{
+    2024-2
+}
+\maketitle
+
+\begin{center}
+    \begin{tabular}{|l|r|}
+      \hline
+      \multicolumn{1}{|c|}{\textbf{Concepto}} &
+        \multicolumn{1}{c|}{\textbf{Tiempo [min]}} \\
+      \hline
+      Revisión & 30\\
+      \hline
+      Desarrollo    & 90\\
+      \hline
+      Informe	      & 30\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+\section{Enunciado}
+Una \emph{partición} de un conjunto \(\mathcal{A}\)
+es un colección de subconjuntos de \(\mathcal{A}\)
+que son disjuntos a pares
+y cuya unión es \(\mathcal{A}\).
+
+El problema \textsc{1-in-3~SAT}
+da una fórmula lógica \(\phi\) en 3CNF,
+pregunta si hay una asignación de variables que satisfacen \(\phi\)
+tal que cada cláusula
+contiene exactamente un literal verdadero y dos falsos.
+Demostramos en clases que \textsc{1-in-3~SAT} es \NP\nobreakdash-completo.
+
+El problema \textsc{Contains~Partition} pone un conjunto \(\mathcal{U}\)
+y una colección \(\mathcal{C}\) de subconjuntos de \(\mathcal{U}\).
+Pregunta si \(\mathcal{C}\) contiene una partición de \(\mathcal{U}\).
+Demuestre que \textsc{Contains~Partition} es \NP\nobreakdash-completo,
+usando el problema \textsc{1-in-3~SAT} visto en clase.
+
+\section{Desarrollo}
+    Para que \textsc{Contains~Partition} sea NP-completo, debe cumplir la condición de ser NP
+    y que todos los problemas NP se reduzcan a este (NP-hard).
+
+\subsection{\textsc{Contains~Partition} en NP}
+    Para demostrar que \textsc{Contains~Partition} está en NP, basta con dar un certificado
+    que verifique que la solución dada satisface el problema en tiempo polinomial.
+    En este caso, dados un conjunto \(\mathcal{U}\) y una colección \(\mathcal{C}\) de subconjuntos,
+    se puede comprobar que los subconjuntos de \(\mathcal{C}\) son disjuntos a pares y que la unión de
+    estos es \(\mathcal{U}\) utilizando operaciones entre conjuntos como intersección y unión, las cuales,
+    para conjuntos finitos, pueden ser computadas en tiempo polinomial y siempre entregar una respuesta.
+    Por lo tanto, podemos decir que \textsc{Contains~Partition} está en NP.
+
+\subsection{\textsc{Contains~Partition} es NP-hard}
+    Para demostrar que \textsc{Contains~Partition} es NP-hard, basta con reducir polinomialmente un problema NP a \textsc{Contains~Partition}, que en
+    este caso será \textsc{1-in-3~SAT}, por lo que procederemos a la demostración.
+    \\\\
+    Partiremos de la ecuación \textsc{1-in-3~SAT} de la forma:
+    $$\phi(x_1, x_2, ..., x_n) \equiv R_1 \wedge ... \wedge R_i \wedge ... \wedge R_m$$
+    donde cada $R_i$ es una cláusula que contiene 3 literales y que solo es verdadera si uno de los 3 literales contenidos
+    en ella es verdadero. Modificaremos esta ecuación para que ninguna aparición de $x_1$ o $x_2$ esté negada, por lo tanto,
+    cada $\bar{x}_1$ o $\bar{x}_2$ se negará otra vez para obtener $\bar{\bar{x}}_1 \equiv x_1$. Además, agregaremos $n-2$ cláusulas
+    de manera que todas las $x_i, i \neq 1, 2$, sean falsas:
+    $$\phi^*(x_1, x_2, ..., x_n) \equiv \phi(x_1, x_2, ..., x_n) \wedge (\bar{x}_3 \vee a \vee b) \wedge (\bar{x}_4 \vee a \vee b) ... \wedge (\bar{x}_n \vee a \vee b)$$
+    donde $a$ y $b$ son siempre falsas. De este modo, obtenemos una ecuación \textsc{1-in-3~SAT} que solo es verdadera si $x_1$ y $x_2$ son
+    verdaderos y además cada cláusula $R_i$ contiene a $x_1$ o a $x_2$, pero no ambos.
+    \\\\
+    Lo que se trata de hacer aquí es que cada cláusula $R_i$ represente un ítem $I_i$ del conjunto \(\mathcal{U}\), y que cada
+    aparición de un $x_1$ o $x_2$ represente que ese ítem pertenece al subconjunto \(\mathcal{U}_1\) o \(\mathcal{U}_2\) dentro
+    de \(\mathcal{C}\). De esta manera, la ecuación $\phi^*$ solo es verdadera si:
+
+    \begin{enumerate}
+        \item Cada ítem $I_i$ de \(\mathcal{U}\) pertenece a \(\mathcal{U}_1\) o \(\mathcal{U}_2\). (Cada $R_i$ debe ser verdadero conteniendo a $x_1$ o $x_2$).
+        \item Los conjuntos \(\mathcal{U}_1\) y \(\mathcal{U}_2\) no repiten ítems entre sí. (No pueden existir $x_1$ y $x_2$ en un mismo $R_i$).
+    \end{enumerate}
+
+    Esto traduce cada instancia de \textsc{1-in-3~SAT}, donde tenemos una ecuación $\phi$ transformada en $\phi^*$ y una combinación de variables $(x_1, ..., x_n)$, en la instancia de \textsc{Contains~Partition}
+    donde se tiene un conjunto \(\mathcal{U}\) y una colección \(\mathcal{C}\) que contiene dos subconjuntos \(\mathcal{U}_1\) y \(\mathcal{U}_2\) de \(\mathcal{U}\). Aquí, $\phi^*$ solo es verdadera
+    si \(\mathcal{C}\) contiene la partición formada por \(\mathcal{U}_1\) y \(\mathcal{U}_2\).
+    \\\\
+    El algoritmo que ejecuta la transformación de $\phi$ a $\phi^*$ está acotado por el polinomio:
+    $$ 3m + 3 * (n-2) \leq 3m + 3n$$
+    donde $3m$ representa la búsqueda y transformación de las apariciones $x_1$ o $x_2$ a lo largo de las $m$ cláusulas, las cuales contienen
+    3 variables, y $3 * (n-2)$ representa agregar una cláusula que contiene 3 variables por cada una de las $n - 2$ variables restantes de $\phi$.
+    \\\\
+    Ya que logramos traducir todas las instancias de \textsc{1-in-3~SAT} (un problema que está en NP) a \textsc{Contains~Partition} con un
+    algoritmo acotado por un polinomio y que siempre entrega una respuesta (\textsc{1-in-3~SAT} $\leq_p$ \textsc{Contains~Partition}),
+    concluimos que \textsc{Contains~Partition} es NP-hard.
+    \\\\
+    Nota*: Cabe resaltar que siempre $n > 2$ y $m \geq 1$ ya que \textsc{1-in-3~SAT} requiere de por lo menos 3 variables y 1 cláusula, 
+    por lo que tiene sentido reducir \textsc{1-in-3~SAT} a \textsc{Contains~Partition}, que necesita de $m \geq 1$ ítems en \(\mathcal{U}\).
+
+\subsection{\textsc{Contains~Partition} es NP-completo}
+    Dado que demostramos que \textsc{Contains~Partition} está en NP y en NP-hard, podemos decir que
+    \textsc{Contains~Partition} es NP-completo.
+
+\end{document}

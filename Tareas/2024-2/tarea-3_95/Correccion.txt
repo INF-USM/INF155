@@ -1,0 +1,1 @@
+1. No se fuerza que se genere al menos un par de a,c

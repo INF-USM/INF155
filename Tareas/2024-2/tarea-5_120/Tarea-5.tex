@@ -1,0 +1,206 @@
+\documentclass[spanish, draft]{article}
+\usepackage{amsmath, amsfonts, amsthm}
+\usepackage{float}
+\usepackage{tikz}
+
+\begin{document}
+
+\title{
+    Tarea 5 \\
+    Informatica Teorica
+}
+\author{
+    Matias peñaloza
+    202373037-8
+}
+\date{
+    2024-2
+}
+\maketitle
+
+\begin{center}
+  \begin{tabular}{|l|r|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Concepto}} &
+      \multicolumn{1}{c|}{\textbf{Tiempo [min]}} \\
+    \hline
+    Revisión & 120\\
+    \hline
+    Desarrollo    & 120\\
+    \hline
+    Informe	      & 90\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{Enunciado}
+Para los siguientes dé una estimación
+de lo que significa el tamaño del problema,
+y justifique que el costo del algoritmo relevante es polinomial.
+Puede suponer operaciones similares a un lenguaje como C.
+Suponga que operaciones aritméticas con números de \(k\)~bits
+tienen costo \(O(k)\),
+igualmente el costo de acceder a un arreglo con índice de \(k\)~bits
+tiene costo \(O(k)\).
+\begin{enumerate}
+\item % 20242t5p1
+  El problema \textsc{Composite} da un entero \(n\) escrito en binario,
+  pregunta si es compuesto
+  (puede escribirse como \(n = a \cdot b\), con \(a, b \ne 1\)).
+  Sabiendo que el producto \(a \cdot b\)
+  de \(a\) y \(b\) expresados en binario
+  puede calcularse en tiempo \(O(\log a \cdot \log b)\),
+  demuestre que \textsc{Composite} está en \textsc{NP}.
+\item % 20242t5p2
+  El problema \textsc{3Clique} da un grafo \(G = (V, E)\),
+  expresado como matriz de adyacencia,
+  y pregunta si contiene un \(K_3\)
+  (un triángulo)
+  como subgrafo.
+  Demuestre que \textsc{3Clique} está en \textsc{P}.
+\end{enumerate}
+
+\section{Desarrollo}
+    
+\subsection{Problema \textsc{Composite}}
+  Primero transformaremos el concepto a algo más conocido, tomaremos el conjunto de números enteros representados en binario que son compuestos y lo llamaremos el lenguaje $L_{com}$. También diremos que el algoritmo que se utiliza para resolver el problema es una máquina de Turing $M_{com}$ tal que $L_{com} = L(M_{com})$. Por último, nuestra máquina $M_{com}$ tendrá como input una palabra $\sigma$ que será un número entero representado en binario, y como output tendrá $Sí$ en caso de que $\sigma \in L_{com}$ y $No$ en caso de que $\sigma \notin L_{com}$.
+
+  \subsubsection{Tamaño del problema}
+  El tamaño para las instancias del problema \textsc{Composite} está dado por el número de bits que se necesitan para representar el número $n$ en binario; a este tamaño lo llamaremos:
+      
+  $$N = \log_2(n) = |\sigma|$$
+
+  \subsubsection{Costo del algoritmo relevante}
+  El algoritmo que utilizará nuestra máquina $M_{com}$ para determinar si aceptar o no será:
+  \begin{enumerate}
+    \item En una cinta guardaremos una lista de los números enteros menores a $n$ y mayores a $1$.
+    \item La máquina copiará \textbf{de forma no determinista} 2 números de la lista a otra cinta.
+    \item Se calculará el producto de los números copiados.
+    \item Se verificará si el producto es finalmente $n$.
+  \end{enumerate}
+  Note que para cada uno de los pasos los costos relevantes asociados son:
+  \begin{enumerate}
+    \item Escribir $n - 2$ números de $N$ bits. $O(N(n-2))$
+    \item Copiar 2 números de $N$ bits. $O(2N)$
+    \item Calcular el producto de 2 números que son a lo más $n - 1$. $O((\log_2(n-1))^2)$
+    \item Verificar si 2 números son iguales es trivial. $O(1)$
+  \end{enumerate}
+  Sumando, obtenemos que el costo del algoritmo es:
+
+  $$N(n - 2) + 2N + (\log_2(n-1))^2 + 1$$
+
+  Donde claramente no se aceptan números menores a 4, ya que nuestra lista debe contener al menos dos números. Podemos decir que, para efectos prácticos, $n \leq N$. Ahora procederemos a acotar la complejidad algorítmica de la máquina:
+
+  $$N(n - 2) + 2N + (\log_2(n-1))^2 + 1 \leq N \cdot N + 2N + (\log_2(n))^2 \leq N^2 + 2N + N^2$$
+
+  Quedando finalmente así el tiempo acotado por el polinomio:
+
+  $$T(N) = 2N^2 + 2N$$
+
+  \subsubsection{Demostración \textsc{Composite} en NP}
+  Dado el lenguaje $L_{com}$ que representa las soluciones a \textsc{Composite} y nuestra máquina de Turing \textbf{no determinista} $M_{com}$ que acepta $\sigma \in L_{com}$ (decide) en un tiempo acotado por un polinomio $T(N)$ donde $N = |\sigma|$, podemos decir que \textsc{Composite} está en NP.
+
+
+
+
+  \subsection{Problema \textsc{3Clique}}
+    Al igual que en el problema anterior, tendremos nuestro grafo representado en una palabra $\sigma$ de forma que, por ejemplo, la matriz:
+    \begin{equation}
+      \begin{bmatrix}
+        0 & 1 & 1 \\
+        1 & 0 & 0 \\
+        1 & 0 & 0
+      \end{bmatrix}
+    \end{equation}
+    es representada de la forma:
+    $$011.100.100$$
+    Donde las listas horizontales están separadas por un punto. También tendremos nuestro lenguaje $L_{3}$, que será el conjunto de grafos representados de la forma antes mencionada que contienen al menos un subgrafo $K_3$. Finalmente, nuestra máquina de Turing $M_3$ tal que $L_3 = L(M_3)$.
+    \\
+    *Note que, a través de contadores, se puede determinar la posición en $x$ e $y$ del enlace en la matriz.
+    
+    \subsubsection{Tamaño del problema}
+    El tamaño de las instancias del problema está dado por:
+    $$N = V^2 + V - 1$$
+    Donde $V^2$ es la cantidad de 1's o 0's de la matriz (huecos de la matriz para los enlaces) y $V - 1$ es la cantidad de puntos (separación vertical de la matriz en listas horizontales).
+    
+    \subsubsection{Costo del algoritmo relevante}
+    El algoritmo que utilizará nuestra máquina $M_3$ para determinar si aceptar o no será:
+    \begin{enumerate}
+      \item Por cada vértice (vértice $V$):
+            \begin{enumerate}
+              \item Por cada vecino de $V$ (vecino $X$):
+                    \begin{enumerate}
+                      \item Por cada vecino siguiente de $V$ distinto de $X$ (vecino $Y$):
+                            \begin{enumerate}
+                              \item Buscaremos al vecino $Y$ en los enlaces de $X$.
+                              \item Si encuentra, termina y acepta.
+                            \end{enumerate}
+                      \item Al terminar con el vecino $Y$, se toma el siguiente vecino.
+                    \end{enumerate}
+              \item Al terminar con el vecino $X$, se toma el siguiente vecino.
+            \end{enumerate}
+      \item Al terminar con el vértice $V$, se toma el siguiente vértice.
+      \item Al terminar con todos los vértices y no haber aceptado, se rechaza.
+    \end{enumerate}
+    
+    Lo que se trata de hacer en este algoritmo es buscar dos vecinos ($X$ e $Y$) de un vértice $V$:
+    
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \node    (V) at (1,1)   {$V$};
+        \node    (X) at (0,0)   {$X$};
+        \node    (Y) at (2,0)   {$Y$};
+        \draw (V) -- (X); 
+        \draw (V) -- (Y); 
+      \end{tikzpicture}      
+    \end{figure}
+    
+    Tal que $X$ e $Y$ estén conectados para formar un $K_3$.
+    
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \node    (V) at (1,1)   {$V$};
+        \node    (X) at (0,0)   {$X$};
+        \node    (Y) at (2,0)   {$Y$};
+        \draw (V) -- (X); 
+        \draw (V) -- (Y); 
+        \draw (X) -- (Y); 
+      \end{tikzpicture}      
+    \end{figure}
+    
+    Ahora, para los costos asociados:
+    \begin{enumerate}
+      \item Por cada lista horizontal. $O(V)$
+            \begin{enumerate}
+              \item[(a), i.] Por cada lista horizontal $X$ e $Y$, donde se comparan una vez cada $X$ con cada $Y$ sin repetir a los vecinos, siendo el peor de los casos la cantidad de vecinos igual a $V$. $O( \sum\limits_{i=1}^V{i} )$
+                              \begin{enumerate}
+                                \item[A.] Buscar el elemento en la lista $X$ en el índice $Y$, donde el índice máximo es $V$. $O(\log_2(V))$
+                                \item[B.] Comparar si el elemento es un $1$ es trivial. $O(1)$
+                              \end{enumerate}
+              \item[(b), ii.] Se sigue la iteración.
+            \end{enumerate}
+      \item Se sigue la iteración, si termina, simplemente no acepta.
+    \end{enumerate}
+    
+    Sumando, obtenemos:
+    
+    $$V * \left( \sum\limits_{i=1}^V{i} * (\log_2(V) + 1) \right) = V * \frac{V*(V+1)}{2} * (\log_2(V) + 1)$$
+    
+    Luego, siendo $\log_2(V) + 1 \leq V^2$, procedemos a acotar:
+    
+    $$V * \frac{V*(V+1)}{2} * (\log_2(V) + 1) \leq V * V * (V + 1) * V^2 \leq V^3 * V^2$$
+    
+    Ahora, tomando en cuenta que $V \neq 0$, ya que el algoritmo necesita por lo menos 3 nodos, entonces $V^2 \leq N$ y $V^3 \leq N^2$:
+    
+    $$V^3 * V^2 \leq N^3$$
+    
+    Quedándonos finalmente el tiempo acotado por el polinomio:
+    
+    $$T(N) = N^3$$
+    
+    \subsubsection{Demostración \textsc{3Clique} en P}
+    Dado el lenguaje $L_3$ que representa las soluciones a \textsc{3Clique} y nuestra máquina de Turing \textbf{determinista} $M_3$, que acepta $\sigma \in L_3$ (decide) en un tiempo acotado por un polinomio $T(N)$ donde $N = |\sigma|$, podemos decir que \textsc{3Clique} está en P.
+  
+\end{document}

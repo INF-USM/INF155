@@ -1,0 +1,2 @@
+1. Problemas para pasar entre estados
+3. PDA 1 seria determinista
